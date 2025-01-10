@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en"data-theme="aqua">
+    <html lang="en"data-theme="corporate">
       <body>
         {/* buat area header */}
         <header>
