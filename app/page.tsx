@@ -1,101 +1,86 @@
-import Image from "next/image";
+"use client"
+import { faPencil, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import { getData, setUpdateStatus } from './models/mahasiswa';
 
-export default function Home() {
+
+//buat fungsi hapus data
+function setDelete(npm : string, nama : string){
+  //alert("Klik Hapus");
+  if(confirm(`Data Mahasiswa : ${npm} - ${nama} ingin dihapus ?`) == true){
+    setUpdateStatus(npm)
+      alert(`Data Mahasiswa : ${npm} - ${nama} berhasil dihapus`);
+      location.reload();
+  }
+ // else {
+    //alert("Cancel");
+  }
+
+
+export default function MainPage() {
+  //buat hooks(use state)
+  const [getValue, setValue] = useState({})
+
+  //buat fungsi fetch data
+
+  async function fetchData()
+  {
+    setValue(await getData())
+  }
+
+//buat hooks (use effect)
+useEffect(() => {
+fetchData()
+},  [])
+
+ // setValue(getData())
+  //getData()
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <>
+    <title>View Data Mahasiswa</title>
+    <nav className="text-center mb-5 flex justify-end">
+    <Link href="/add" className="btn btn-outline btn-success">
+    <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+      Tambah Data Mahasiswa 
+    </Link>
+    </nav>
+      <table className="w-full">
+        <thead>
+          <tr className="bg-slate-300 h-12 border border-slate-700 p-5px text-center">
+            <th className="w-10% border border-slate-700 p-5px text-center">Aksi</th>
+            <th className="w-10% border border-slate-700 p-5px text-center">NPM</th>
+            <th className="w-1/2 border border-slate-700 p-5px text-center">Nama</th>
+            <th className="w-30% border border-slate-700 p-5px text-center">Jurusan</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {Object.values(getValue).map((data: any, index: number) => (
+            <tr key={index} className="border border-slate-700 p-5px text-center">
+              <td className="border border-slate-700 p-5px text-center">
+                {/*icon edit*/}
+                <Link href={`/edit/${btoa(data.npm)}`} className="bg-cyan-700 text-white py-5px px-10px rounded mr-5px text-xs">
+                <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
+                </Link>
+
+                {/*icon delete*/}
+                <Link href={"/"} className="bg-rose-700 text-white py-5px px-10px rounded ml-5px text-xs " onClick={() => {setDelete(data.npm, data.nama)}}>
+                <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
+                </Link>
+
+
+              </td>
+              <td className="border border-slate-700 p-5px text-center">{data.npm}</td>
+              <td className="border border-slate-700 p-5px text-justify">{data.nama}</td>
+              <td className="border border-slate-700 p-5px text-center">{data.jurusan}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }
